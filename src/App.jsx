@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import QuestionList from './components/QuestionList';
 
 const AppDisplay = ({ test }) => {
   return (
@@ -7,14 +8,13 @@ const AppDisplay = ({ test }) => {
       <h1>
         Isomorphic React { test }
       </h1>
+      <div>
+        <QuestionList />
+      </div>
     </div>
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    ...state
-  }
-};
+const mapStateToProps = (state, ownProps) => ({ ...state });
 
 export default connect(mapStateToProps)(AppDisplay);
