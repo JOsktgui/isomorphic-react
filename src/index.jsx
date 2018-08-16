@@ -19,5 +19,22 @@ const render = _App => {
   );
 };
 
-render(App);
+if (module.hot) {
+  module.hot.accept('./App', () => {
+    const NextApp = require('./App').default;
+    render(NextApp);
+  });
+}
+
+store.subscribe(() => {
+  const state = store.getState();
+
+  if (state.questions.length > 0) {
+    console.info('Mounting app');
+    render(App);
+  } else {
+    console.info('App not yet mounting');
+  }
+});
+
 fetchDataForLocation();
