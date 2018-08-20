@@ -13,6 +13,7 @@ import React from 'react';
 import App from '../src/App';
 import { ConnectedRouter } from 'react-router-redux';
 import createHistory from 'history/createMemoryHistory';
+import path from 'path';
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -68,14 +69,24 @@ if (process.env.NODE_ENV === 'development') {
   }));
 
   app.use(require('webpack-hot-middleware')(compiler));
+} else {
+  app.use(express.static(path.resolve(__dirname, '../dist')));
 }
 
 app.get(['/', '/questions/:id'], function * (req, res) {
   let index = yield fs.readFile('./public/index.html', 'utf-8');
   const initialState = { questions: [] };
   const history = createHistory({ initialEntries: [req.path] });
-  const questions = yield getQuestions();
-  initialState.questions = questions.items;
+
+  if (req.params.id) {
+    const question_id = req.params.id;
+    const response = yield getQuestion(question_id);
+    const questionDetails = response.items[0];
+    initialState.questions = [{...questionDetails, question_id}]
+  } else {
+    const questions = yield getQuestions();
+    initialState.questions = questions.items;
+  }
 
   const store = getStore(history, initialState);
 
