@@ -40,8 +40,9 @@ function * getQuestion(question_id) {
     data = yield get(question(question_id), {gzip: true, json: true});
   } else {
     const questions = yield getQuestions();
+    console.log('QUESTIONS', questions);
     const question = questions.items.find(_question => _question.question_id == question_id);
-    question.body = `Mock question body: ${question_id}`;
+    question.title = `Mock question body: ${question_id}`;
     data = { items: [questions] };
   }
 
